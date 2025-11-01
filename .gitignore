@@ -1,0 +1,6 @@
+# Deny-list
+*
+
+# Allow-list
+!.gitignore
+!ip_mapper.sh
