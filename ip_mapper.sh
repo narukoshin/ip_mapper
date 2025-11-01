@@ -99,6 +99,7 @@ if [[ -n "$RESULTS" ]]; then
     echo "Saving results to '$RESULTS'..."
     cp "$TEMP" "$RESULTS"
     echo "Done."
-    echo "Deleting temporary file... $TEMP"
-    rm -f "$TEMP"
 fi
+
+echo "Deleting temporary file... $TEMP"
+rm -f "$TEMP"
