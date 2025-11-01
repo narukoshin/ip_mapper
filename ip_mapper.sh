@@ -72,7 +72,11 @@ done
 echo -e "\033[1;32mUnique IPs (1 domain only):\033[0m" | tee -a "$TEMP"
 unique_count=0
 for ip in "${!ip_count[@]}"; do
-    [[ ${ip_count[$ip]} -eq 1 ]] && printf "  %s → %s\n" "$ip" "$(echo -e "${ip_to_domains[$ip]}" | xargs)" && ((unique_count++)) | tee -a "$TEMP"
+    if [[ ${ip_count[$ip]} -eq 1 ]]; then
+        printf "  %s → %d domains\n" "$ip" "${ip_count[$ip]}" | tee -a "$TEMP"
+        ((unique_count++))
+    fi
+
 done
 [[ $unique_count -eq 0 ]] && echo "  None" | tee -a "$TEMP"
 
