@@ -23,6 +23,7 @@ TEMP=$(mktemp)
 declare -A ip_to_domains
 declare -A ip_count
 declare -A unresolved
+unresolved_count=0
 
 echo "Resolving domains from '$FILE'..."
 
@@ -45,6 +46,7 @@ while IFS= read -r domain || [[ -n "$domain" ]]; do
     # If still no IP, mark as unresolved
     if [[ -z "$ip" || "$ip" == *"timed out"* ]]; then
         unresolved["$domain"]=""
+        ((unresolved_count++))
         echo "ERROR: Could not resolve $domain"
         continue
     fi
@@ -103,7 +105,7 @@ fi
 
 # Show unresolved domains
 echo | tee -a "$TEMP"
-echo -e "\033[1;33mUnresolved domains:\033[0m" | tee -a "$TEMP"
+printf "\033[1;33mUnresolved domains (%d domain%s):\033[0m\n" "$unresolved_count" "$([[ $unresolved_count -gt 1 ]] && echo "s")"
 for domain in "${!unresolved[@]}"; do
     printf "  %s\n" "$domain" | tee -a "$TEMP"
 done
