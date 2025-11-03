@@ -22,13 +22,14 @@ fi
 TEMP=$(mktemp)
 declare -A ip_to_domains
 declare -A ip_count
+declare -A unresolved
 
 echo "Resolving domains from '$FILE'..."
 
 # Read each domain, resolve IP, group
 while IFS= read -r domain || [[ -n "$domain" ]]; do
     [[ -z "$domain" ]] && continue
-    domain=$(echo "$domain" | xargs)  # trim whitespace
+    domain=$(echo "$domain" | tr -d '\r' | xargs)
 
     echo -n "."
 
@@ -41,7 +42,9 @@ while IFS= read -r domain || [[ -n "$domain" ]]; do
     # Fallback to ping (slower, but works)
     [[ -z "$ip" ]] && ip=$(ping -c1 "$domain" 2>/dev/null | head -1 | grep -oE '([0-9]{1,3}\.){3}[0-9]{1,3}' | head -1)
 
+    # If still no IP, mark as unresolved
     if [[ -z "$ip" || "$ip" == *"timed out"* ]]; then
+        unresolved["$domain"]=""
         echo "ERROR: Could not resolve $domain"
         continue
     fi
@@ -55,7 +58,7 @@ done < "$FILE"
 
 echo
 echo "==========================================" | tee -a "$TEMP"
-echo "RESULTS" | tee -a "$TEMP"
+echo "                  RESULTS" | tee -a "$TEMP"
 echo "==========================================" | tee -a "$TEMP"
 
 # === 1. Show domains grouped by IP ===
@@ -98,6 +101,13 @@ else
     echo -e "\033[1;33mNo IP shared by multiple domains.\033[0m" | tee -a "$TEMP"
 fi
 
+# Show unresolved domains
+echo | tee -a "$TEMP"
+echo -e "\033[1;33mUnresolved domains:\033[0m" | tee -a "$TEMP"
+for domain in "${!unresolved[@]}"; do
+    printf "  %s\n" "$domain" | tee -a "$TEMP"
+done
+
 # Save results
 if [[ -n "$RESULTS" ]]; then
     echo "Saving results to '$RESULTS'..."
@@ -105,5 +115,6 @@ if [[ -n "$RESULTS" ]]; then
     echo "Done."
 fi
 
+echo
 echo "Deleting temporary file... $TEMP"
 rm -f "$TEMP"
