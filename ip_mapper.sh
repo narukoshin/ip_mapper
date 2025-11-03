@@ -8,7 +8,7 @@
 
 # Parameters
 
-VERSION="v1.0.4"
+VERSION="v1.0.5-beta"
 
 FILE="$1"
 RESULTS="$2"
@@ -44,8 +44,13 @@ while IFS= read -r domain || [[ -n "$domain" ]]; do
     echo -n "."
 
     # Get IP (first result only, ignore aliases)
-    ip=$(host "$domain" 2>/dev/null | grep -m1 "has address" | awk '{print $4}')
-    
+    tries=0
+    while [[ $tries -lt 3 ]]; do
+        ip=$(host "$domain" 2>/dev/null | grep -m1 "has address" | awk '{print $4}')
+        [[ -n "$ip" ]] && break
+        ((tries++))
+    done
+
     # Fallback to dig if host fails
     [[ -z "$ip" ]] && ip=$(dig +short "$domain" 2>/dev/null | head -1)
 
@@ -61,8 +66,7 @@ while IFS= read -r domain || [[ -n "$domain" ]]; do
     fi
 
     # Store in associative arrays
-    ip_to_domains["$ip"]+="$domain
-"
+    ip_to_domains["$ip"]+="$domain"
     ((ip_count["$ip"]++))
 
 done < "$FILE"
