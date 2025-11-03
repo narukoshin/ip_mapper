@@ -7,8 +7,17 @@
 # Usage: ./ip_mapper.sh domains.txt results.txt
 
 # Parameters
+
+VERSION="v1.0.4"
+
 FILE="$1"
 RESULTS="$2"
+
+if [[ "$1" == "version" ]]; then
+    echo -e "\033[1;33mAuthor: Naru Koshin\033[0m"
+    echo -e "\033[1;33mVersion: $VERSION\033[0m"
+    exit 0
+fi
 
 # Check if file is provided
 if [[ -z "$FILE" || ! -f "$FILE" ]]; then
