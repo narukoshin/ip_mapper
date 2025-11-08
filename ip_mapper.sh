@@ -201,7 +201,7 @@ if [[ -n "$RESOLVED_OUTPUT" ]]; then
 
     echo "  → $(grep -c '^' < "$RESOLVED_OUTPUT") resolved domains saved"
     echo "Done."
-    echo -e "\n\033[1;4;35mNote:\033[0m \033[1;97mRecommended directory scan for red team:\033[0m \033[38;5;208mcat \"$RESOLVED_OUTPUT\" | feroxbuster --stdin -r --auto-tune --random-agent -f -E -q -o ferox_results.txt\033[0m\n"
+    echo -e "\n\033[1;4;35mNote:\033[0m \033[1;97mRecommended directory scan for red team:\033[0m \033[38;5;208mcat $RESOLVED_OUTPUT | feroxbuster --stdin -r --auto-tune --random-agent -f -E -q -o ferox_results.txt\033[0m\n"
 fi
 
 
