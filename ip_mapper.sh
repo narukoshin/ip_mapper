@@ -218,5 +218,6 @@ if [[ -n "$UNIQUE_IPS_OUTPUT" ]]; then
     echo -e "\n\033[1;4;35mNote:\033[0m \033[1;97mRecommended nmap for red team:\033[0m \033[38;5;208mnmap -iL $UNIQUE_IPS_OUTPUT --open -sV -O -T4 -p- -oN nmap_results.txt\033[0m\n"
 fi
 
+echo
 echo "Deleting temporary file... $TEMP"
 rm -f "$TEMP"
