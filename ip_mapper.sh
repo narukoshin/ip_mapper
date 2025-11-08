@@ -6,7 +6,7 @@
 # https://github.com/narukoshin
 # Usage: ./ip_mapper.sh -f <file> [options]
 
-VERSION="v2.0.0"
+VERSION="v2.0.1"
 
 # Defining default parameters
 INPUT=""
