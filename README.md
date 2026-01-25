@@ -72,7 +72,7 @@ Most repeated IP: 1.1.1.1 → 2 domains
 
 ## 🫧 License
 
-MIT — do what you love!
+AGPL-3
 
 ---
 
